@@ -25,4 +25,28 @@ interface MovieRepository : JpaRepository<Movie, Long> {
         @Param("yearTo") yearTo: Int?,
         pageable: Pageable
     ): Page<Movie>
+
+    @Query(
+        value = """
+    select * from movies m
+    where (:title is null or m.title ilike concat('%', :title, '%'))
+      and (:genre is null or m.genres ilike concat('%', :genre, '%'))
+      and (:yearFrom is null or m.year >= :yearFrom)
+      and (:yearTo   is null or m.year <= :yearTo)
+  """, countQuery = """
+    select count(*) from movies m
+    where (:title is null or m.title ilike concat('%', :title, '%'))
+      and (:genre is null or m.genres ilike concat('%', :genre, '%'))
+      and (:yearFrom is null or m.year >= :yearFrom)
+      and (:yearTo   is null or m.year <= :yearTo)
+  """,
+        nativeQuery = true
+    )
+    fun searchNative(
+        @Param("title") title: String?,
+        @Param("genre") genre: String?,
+        @Param("yearFrom") yearFrom: Int?,
+        @Param("yearTo") yearTo: Int?,
+        pageable: Pageable
+    ): Page<Movie>
 }

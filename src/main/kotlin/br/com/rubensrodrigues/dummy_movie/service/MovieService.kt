@@ -14,7 +14,7 @@ class MovieService(private val repo: MovieRepository) {
 
     @Transactional(readOnly = true)
     fun list(title: String?, genre: String?, yearFrom: Int?, yearTo: Int?, pageable: Pageable): Page<MovieResponse> {
-        return repo.search(title?.ifBlank { null }, genre?.ifBlank { null }, yearFrom, yearTo, pageable)
+        return repo.searchNative(title?.ifBlank { null }, genre?.ifBlank { null }, yearFrom, yearTo, pageable)
             .map(MovieResponse::from)
     }
 
